@@ -5,8 +5,8 @@ import Registration from '../containers/registration/Registration'
 const Routes = () => (
     <Router>
         <Switch >
-            <Route path="/" component={Login} />
-            <Route path="/register" component={Registration} />
+            <Route path="/login" component={Login} />
+            <Route path="/" component={Registration} />
         </Switch>
     </Router>
 )
