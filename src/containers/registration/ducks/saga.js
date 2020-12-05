@@ -1,14 +1,14 @@
 import { all, call, put, takeEvery } from "redux-saga/effects";
 import { invoke } from "../../../util/apiConfig";
 import { initiateRegistrationFailure, initiateRegistrationSuccess } from "./action";
-import { INITIATE_REGISTRATION_SUCCESS } from "./constant";
+import { INITIATE_REGISTRATION, INITIATE_REGISTRATION_SUCCESS } from "./constant";
 
 function* initiateRegistration(action) {
     const { user } = action
     try {
         const response = yield call(invoke, '/register', {
             method: "POST",
-            body: JSON.stringify({ data: user })
+            body: JSON.stringify(user)
         })
         const data = response.json()
         if (response.status === 200) {
@@ -24,6 +24,6 @@ function* initiateRegistration(action) {
 
 export default function* watchAll() {
     yield all([
-        takeEvery(INITIATE_REGISTRATION_SUCCESS, initiateRegistration)
+        takeEvery(INITIATE_REGISTRATION, initiateRegistration)
     ]);
 }

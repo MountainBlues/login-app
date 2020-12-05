@@ -8,7 +8,7 @@ function* initiateLogin(action) {
     try {
         const response = yield call(invoke, '/login', {
             method: "POST",
-            body: JSON.stringify({ data: user })
+            body: JSON.stringify(user)
         })
         const data = response.json()
         if (response.status === 200) {

@@ -1,5 +1,5 @@
 const hostname =
-  process.env.NODE_ENV === "development" ? "https://backend.slogover.com:9443" : "https://backend.slogover.com:9443";
+  process.env.NODE_ENV === "development" ? "http://localhost:3001" : "http://localhost:3001";
 
 export const invoke = (url, options = {}) => {
   console.log('API request ===============>', options)

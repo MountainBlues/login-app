@@ -3,6 +3,8 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { useForm, Controller } from "react-hook-form";
+import { useDispatch } from 'react-redux';
+import { initiateLogin } from './ducks/action';
 
 const useStyles = makeStyles({
     containerStyle: {
@@ -43,9 +45,10 @@ const useStyles = makeStyles({
 
 const Login = () => {
     const classes = useStyles()
+    const dispatch = useDispatch()
     const { control, handleSubmit, errors } = useForm();
 
-    const submitHandler = val => console.log(val)
+    const submitHandler = val => dispatch(initiateLogin(val))
 
     return (
         <Container className={classes.containerStyle}>
