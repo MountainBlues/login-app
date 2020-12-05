@@ -1,0 +1,16 @@
+import { INITIATE_REGISTRATION, INITIATE_REGISTRATION_FAILURE, INITIATE_REGISTRATION_SUCCESS } from "./constant";
+
+export const initiateRegistration = user => ({
+    type: INITIATE_REGISTRATION,
+    user
+})
+
+export const initiateRegistrationSuccess = payload => ({
+    type: INITIATE_REGISTRATION_SUCCESS,
+    payload
+})
+
+export const initiateRegistrationFailure = payload => ({
+    type: INITIATE_REGISTRATION_FAILURE,
+    payload
+})
