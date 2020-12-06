@@ -1,10 +1,12 @@
-import { Container, TextField } from '@material-ui/core'
-import React from 'react'
+import { Container, Snackbar, TextField, Typography } from '@material-ui/core'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { useForm, Controller } from "react-hook-form";
 import { useDispatch } from 'react-redux';
 import { initiateLogin } from './ducks/action';
+import { Link, useHistory } from 'react-router-dom';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles({
     containerStyle: {
@@ -28,7 +30,8 @@ const useStyles = makeStyles({
       color: 'white',
       height: 48,
       padding: '0 30px',
-      marginTop: 10
+      marginTop: 10,
+      marginBottom: 20
     },
     userNameStyle: {
         marginTop: 10,
@@ -44,14 +47,31 @@ const useStyles = makeStyles({
   
 
 const Login = () => {
+    const [open, setOpen] = useState(false)
+    const [errorMessage, setErrorMessage] = useState(false)
     const classes = useStyles()
     const dispatch = useDispatch()
+    const history = useHistory()
     const { control, handleSubmit, errors } = useForm();
+    const onLoginSuccess = (data) => {
+        sessionStorage.setItem("user", JSON.stringify(data))
+        history.push('/dashboard')
+    }
+    const onLoginFailure = (message) => {
+        setOpen(true)
+        setErrorMessage(message)
+    }
+    const handleClose = () => setOpen(false)
 
-    const submitHandler = val => dispatch(initiateLogin(val))
+    const submitHandler = val => dispatch(initiateLogin(val, onLoginSuccess, onLoginFailure))
 
     return (
         <Container className={classes.containerStyle}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                <Alert onClose={handleClose} severity="error">
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
             <form className={classes.formContainerStyle} onSubmit={handleSubmit(submitHandler)}>
                 <Controller
                     as={TextField}
@@ -69,6 +89,7 @@ const Login = () => {
                     as={TextField}
                     name="password"
                     control={control}
+                    type="password"
                     defaultValue=""
                     id="password"
                     className={classes.passwordStyle}
@@ -78,6 +99,11 @@ const Login = () => {
                     helperText={errors && errors.password && "Password is required."}
                 />
                 <Button type="submit" className={classes.loginBtn}>Login</Button>
+                <Typography>
+                    <Link href="#" onClick={() => history.push('/register')}>
+                        Not a member? Register now
+                    </Link>
+                </Typography>
             </form>
         </Container>
     )

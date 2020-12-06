@@ -4,17 +4,22 @@ import { initiateLoginFailure, initiateLoginSuccess } from "./action";
 import { INITIATE_LOGIN } from "./constant";
 
 function* initiateLogin(action) {
-    const { user } = action
+    const { user, onLoginSuccess, onLoginFailure } = action
     try {
         const response = yield call(invoke, '/login', {
             method: "POST",
             body: JSON.stringify(user)
         })
-        const data = response.json()
+        const data = yield response.json()
         if (response.status === 200) {
             yield put(initiateLoginSuccess(data))
+            if (typeof onLoginSuccess === 'function') {
+                onLoginSuccess(data)
+            }
         } else {
-            yield put(initiateLoginFailure(data))
+            if (typeof onLoginFailure === 'function') {
+                onLoginFailure(response.status === 403 ? 'Username or password is incorrect' : 'Something went wrong!')
+            }
         }
     } catch (error) {
         yield put(initiateLoginFailure(error))

@@ -1,9 +1,11 @@
-import { Button, Container, TextField } from '@material-ui/core'
-import React from 'react'
+import { Button, Container, Snackbar, TextField, Typography, Al } from '@material-ui/core'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { initiateRegistration } from './ducks/action'
+import { Link, useHistory } from 'react-router-dom';
+import { Alert } from '@material-ui/lab'
 
 const useStyles = makeStyles({
     containerStyle: {
@@ -40,18 +42,35 @@ const useStyles = makeStyles({
         height: 48,
         padding: '0 30px',
         marginTop: 10
-      }
+    },
+    btnContainerStyle: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginLeft: 10,
+        marginRight: 10
+    }
 })
 
 const Registration = () => {
+    const [open, setOpen] = useState(false)
     const classes = useStyles()
     const dispatch = useDispatch()
+    const history = useHistory()
     const { control, handleSubmit, errors } = useForm();
 
-    const submitHandler = values => dispatch(initiateRegistration(values))
+    const onRegistrationSuccess = () => setOpen(true)
+    const handleClose = () => setOpen(false)
+
+    const submitHandler = values => dispatch(initiateRegistration(values, onRegistrationSuccess))
 
     return (
         <Container className={classes.containerStyle}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                <Alert onClose={handleClose} severity="success">
+                    Success! You are now registered member. Please log in
+                </Alert>
+            </Snackbar>
             <form className={classes.formContainerStyle} onSubmit={handleSubmit(submitHandler)}>
                 <div className={classes.rowStyle}>
                     <Controller
@@ -134,7 +153,12 @@ const Registration = () => {
                         helperText={errors && errors.city && "Place of birth is required."}
                     />
                 </div>
-                <div className={classes.rowStyle}>
+                <div className={classes.btnContainerStyle}>
+                    <Typography>
+                        <Link href="#" onClick={() => history.push('/login')}>
+                            Already registered? Please log in
+                        </Link>
+                    </Typography>
                     <Button type="submit" className={classes.registerBtn}>Register</Button>
                 </div>
             </form>

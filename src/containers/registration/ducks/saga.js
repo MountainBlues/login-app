@@ -4,15 +4,18 @@ import { initiateRegistrationFailure, initiateRegistrationSuccess } from "./acti
 import { INITIATE_REGISTRATION, INITIATE_REGISTRATION_SUCCESS } from "./constant";
 
 function* initiateRegistration(action) {
-    const { user } = action
+    const { user, onRegistrationSuccess } = action
     try {
         const response = yield call(invoke, '/register', {
             method: "POST",
             body: JSON.stringify(user)
         })
-        const data = response.json()
-        if (response.status === 200) {
+        const data = yield response.json()
+        if (response.status === 201) {
             yield put(initiateRegistrationSuccess(data))
+            if (typeof onRegistrationSuccess === 'function') {
+                onRegistrationSuccess()
+            }
         } else {
             yield put(initiateRegistrationFailure(data))
         }

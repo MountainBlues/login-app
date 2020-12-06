@@ -1,8 +1,10 @@
 import { INITIATE_LOGIN, INITIATE_LOGIN_FAILURE, INITIATE_LOGIN_SUCCESS } from "./constant";
 
-export const initiateLogin = user => ({
+export const initiateLogin = (user, onLoginSuccess, onLoginFailure) => ({
     type: INITIATE_LOGIN,
-    user
+    user,
+    onLoginSuccess,
+    onLoginFailure
 })
 
 export const initiateLoginSuccess = payload => ({
