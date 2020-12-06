@@ -4,7 +4,7 @@ import { initiateRegistrationFailure, initiateRegistrationSuccess } from "./acti
 import { INITIATE_REGISTRATION, INITIATE_REGISTRATION_SUCCESS } from "./constant";
 
 function* initiateRegistration(action) {
-    const { user, onRegistrationSuccess } = action
+    const { user, onRegistrationSuccess, onRegistrationFailure } = action
     try {
         const response = yield call(invoke, '/register', {
             method: "POST",
@@ -18,6 +18,9 @@ function* initiateRegistration(action) {
             }
         } else {
             yield put(initiateRegistrationFailure(data))
+            if (typeof onRegistrationFailure === 'function') {
+                onRegistrationFailure(data.status)
+            }
         }
     } catch (error) {
         yield put(initiateRegistrationFailure(error))

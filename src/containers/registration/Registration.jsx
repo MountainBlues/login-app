@@ -54,21 +54,29 @@ const useStyles = makeStyles({
 
 const Registration = () => {
     const [open, setOpen] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
     const classes = useStyles()
     const dispatch = useDispatch()
     const history = useHistory()
     const { control, handleSubmit, errors } = useForm();
 
     const onRegistrationSuccess = () => setOpen(true)
-    const handleClose = () => setOpen(false)
+    const onRegistrationFailure = (message) => {
+        setErrorMessage(message)
+        setOpen(true)
+    }
+    const handleClose = () => {
+        setOpen(false)
+        setErrorMessage('')
+    }
 
-    const submitHandler = values => dispatch(initiateRegistration(values, onRegistrationSuccess))
+    const submitHandler = values => dispatch(initiateRegistration(values, onRegistrationSuccess, onRegistrationFailure))
 
     return (
         <Container className={classes.containerStyle}>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-                <Alert onClose={handleClose} severity="success">
-                    Success! You are now registered member. Please log in
+                <Alert onClose={handleClose} severity={errorMessage ? "error" : "success"}>
+                    {errorMessage ? errorMessage : 'Success! You are now registered member. Please log in'}
                 </Alert>
             </Snackbar>
             <form className={classes.formContainerStyle} onSubmit={handleSubmit(submitHandler)}>
@@ -134,6 +142,7 @@ const Registration = () => {
                         InputLabelProps={{
                             shrink: true,
                         }}
+                        defaultValue={(new Date()).toISOString().split('T')[0]}
                         type="date"
                         className={classes.dateOfBirthStyle}
                         rules={{ required: true }}
@@ -155,9 +164,9 @@ const Registration = () => {
                 </div>
                 <div className={classes.btnContainerStyle}>
                     <Typography>
-                        <Link href="#" onClick={() => history.push('/login')}>
+                        <a href="javascript:void(0)" onClick={() => history.push('/login')}>
                             Already registered? Please log in
-                        </Link>
+                        </a>
                     </Typography>
                     <Button type="submit" className={classes.registerBtn}>Register</Button>
                 </div>

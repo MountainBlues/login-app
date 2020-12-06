@@ -18,7 +18,7 @@ function* initiateLogin(action) {
             }
         } else {
             if (typeof onLoginFailure === 'function') {
-                onLoginFailure(response.status === 403 ? 'Username or password is incorrect' : 'Something went wrong!')
+                onLoginFailure(data.status)
             }
         }
     } catch (error) {

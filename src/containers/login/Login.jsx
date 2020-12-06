@@ -100,9 +100,9 @@ const Login = () => {
                 />
                 <Button type="submit" className={classes.loginBtn}>Login</Button>
                 <Typography>
-                    <Link href="#" onClick={() => history.push('/register')}>
+                    <a href="javascript:void(0)" onClick={() => history.push('/register')}>
                         Not a member? Register now
-                    </Link>
+                    </a>
                 </Typography>
             </form>
         </Container>
